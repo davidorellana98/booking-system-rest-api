@@ -5,6 +5,7 @@ public class UserDto {
     private String name;
     private String lastName;
     private Integer age;
+    private String identityCard;
     private String email;
 
     public UserDto() { }
@@ -31,6 +32,14 @@ public class UserDto {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public String getIdentityCard() {
+        return identityCard;
+    }
+
+    public void setIdentityCard(String identityCard) {
+        this.identityCard = identityCard;
     }
 
     public String getEmail() {
