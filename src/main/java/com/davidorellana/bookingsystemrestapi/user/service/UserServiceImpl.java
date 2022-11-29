@@ -1,39 +1,41 @@
 package com.davidorellana.bookingsystemrestapi.user.service;
 
 import com.davidorellana.bookingsystemrestapi.user.model.data.User;
+import com.davidorellana.bookingsystemrestapi.user.model.dto.UserDto;
+import com.davidorellana.bookingsystemrestapi.user.repository.UserRepositoryDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 
 @Service
-public class UserServiceImpl implements UserServiceI {
+public class UserServiceImpl implements UserService {
 
-    private final HashMap<Long, User> userServiceHashMap = new HashMap<>();
+    @Autowired
+    private UserRepositoryDao userRepositoryDao;
 
     @Override
-    public HashMap<Long, User> allUsers() {
-        return userServiceHashMap;
+    public HashMap<Long, User> getAllUsers() {
+        return userRepositoryDao.getAllUsers();
     }
 
     @Override
     public User findUserById(Long idUser) {
-        return userServiceHashMap.get(idUser);
+        return userRepositoryDao.findUserById(idUser);
     }
 
     @Override
-    public User createUser(User user) {
-        Long keyUser = user.getId();
-        return userServiceHashMap.put(keyUser, user);
+    public User createUser(UserDto userDto) {
+        return userRepositoryDao.createUser(userDto);
     }
 
     @Override
-    public User updateUserById(Long idUser, User user) {
-        Long keyUser = user.setId(idUser);
-        return userServiceHashMap.replace(keyUser, user);
+    public User updateUserById(Long idUser, UserDto userDto) {
+        return userRepositoryDao.updateUserById(idUser, userDto);
     }
 
     @Override
-    public User deleteUserById(Long idUser) {
-        return userServiceHashMap.remove(idUser);
+    public Boolean deleteUserById(Long idUser) {
+        return userRepositoryDao.deleteUserById(idUser);
     }
 }
