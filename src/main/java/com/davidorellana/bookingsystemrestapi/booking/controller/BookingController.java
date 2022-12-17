@@ -3,18 +3,16 @@ package com.davidorellana.bookingsystemrestapi.booking.controller;
 import com.davidorellana.bookingsystemrestapi.booking.model.data.Booking;
 import com.davidorellana.bookingsystemrestapi.booking.model.dto.BookingDto;
 import com.davidorellana.bookingsystemrestapi.booking.service.BookingService;
-import com.davidorellana.bookingsystemrestapi.user.model.data.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-@RequestMapping("/api/v1/bookings")
+@RequestMapping("/v1/bookings")
 public class BookingController {
 
     private final BookingService bookingService;
@@ -25,48 +23,75 @@ public class BookingController {
     }
 
     @GetMapping
-    public ResponseEntity<HashMap<Long, Booking>> getAllBookings() {
-        HashMap<Long, Booking> listBooking = bookingService.getAllBookings();
-        if (listBooking.isEmpty()) {
-            return new ResponseEntity("There are no bookings to display!", HttpStatus.NOT_FOUND);
+    public ResponseEntity<List<Booking>> getAllBookings() {
+        List<Booking> allBookings = bookingService.findAllBookings();
+        if (allBookings.isEmpty()) {
+            return new ResponseEntity("The bookings collection is empty.", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(listBooking, HttpStatus.OK);
+        return new ResponseEntity<>(allBookings, HttpStatus.OK);
     }
 
-    @GetMapping("/{idBooking}")
-    public ResponseEntity<Booking> findBookingById(@PathVariable Long idBooking) {
-        Booking bookingById = bookingService.findBookingById(idBooking);
-        if (bookingById != null) {
-            return new ResponseEntity<>(bookingById, HttpStatus.OK);
+    @GetMapping("/{id}")
+    public ResponseEntity<Booking> findBookingById(@PathVariable String id) {
+        Booking bookingByIdFound = bookingService.findBookingById(id);
+        if (bookingByIdFound != null) {
+            return new ResponseEntity<>(bookingByIdFound, HttpStatus.OK);
         }
-        return new ResponseEntity("That booking id does not exist!", HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity("The id " + id + " does not exist in the bookings collection.", HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping
-    public ResponseEntity<User> createBooking(@RequestBody BookingDto bookingDto) {
-        Optional<Booking> bookingValidationCreated = Optional.ofNullable(bookingService.createBooking(bookingDto));
-        if (bookingValidationCreated != null) {
-            return new ResponseEntity("Created booking!", HttpStatus.CREATED);
+    @PostMapping()
+    public ResponseEntity<Booking> createBooking(@RequestBody BookingDto bookingDto) {
+        Booking bookingCreated = bookingService.createBooking(bookingDto);
+        if (bookingCreated != null) {
+            return new ResponseEntity<>(bookingCreated, HttpStatus.CREATED);
         }
-        return new ResponseEntity("Booking not created!", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity("Error creating booking, inconsistent dates, please enter the start and end dates correctly.", HttpStatus.CONFLICT);
+
     }
 
-    @PutMapping("/{idBooking}")
-    public ResponseEntity<User> updateBookingById(@PathVariable Long idBooking, @RequestBody BookingDto bookingDto) {
-        Booking bookingUpdated = bookingService.updateBookingById(idBooking, bookingDto);
-        if (bookingUpdated != null){
-            return new ResponseEntity("Updated booking!", HttpStatus.OK);
-        }else{
-            return new ResponseEntity("Booking not updated by id not found!", HttpStatus.NOT_FOUND);
+    @PutMapping("/{id}")
+    public ResponseEntity<Booking> updateBookingById(@PathVariable String id, @RequestBody BookingDto bookingDto) {
+        Booking bookingUpdated = bookingService.updateBookingById(id, bookingDto);
+        if (bookingUpdated != null) {
+            return new ResponseEntity<>(bookingUpdated, HttpStatus.OK);
         }
+        return new ResponseEntity("Booking update failed due to inconsistent ID or dates.", HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping("/{idBooking}")
-    public ResponseEntity deleteBookingById(@PathVariable Long idBooking) {
-        Boolean isDeletedBooking = bookingService.deleteBookingById(idBooking);
-        if (isDeletedBooking) {
-            return new ResponseEntity("Deleted booking!", HttpStatus.OK);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> deleteBookingById(@PathVariable String id) {
+        if (bookingService.deleteBookingById(id)) {
+            return new ResponseEntity("Deleted booking.", HttpStatus.OK);
         }
-        return new ResponseEntity("The booking does not exist to be deleted!", HttpStatus.NOT_FOUND);
+        return new ResponseEntity("The id " + id + " is not found in the collection of bookings to delete.", HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping
+    public ResponseEntity deleteAllBookings() {
+        List<Booking> allBookings = bookingService.findAllBookings();
+        bookingService.deleteAllBookings();
+        if (allBookings.isEmpty()) {
+            return new ResponseEntity("There is no collection of bookings to delete.", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity("Correct deletion of the entire booking collection.", HttpStatus.OK);
+    }
+
+   @GetMapping("/bookingType/{bookingType}")
+    public ResponseEntity<List<Booking>> findBookingsByBookingType(@PathVariable String bookingType) {
+       List<Booking> bookingsByBookingTypeFound = bookingService.findBookingsByBookingType(bookingType);
+       if (bookingsByBookingTypeFound != null) {
+           return new ResponseEntity<>(bookingsByBookingTypeFound, HttpStatus.OK);
+       }
+       return new ResponseEntity("The booking with the name " + bookingType + " is not found in the bookings collection.", HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/paymentMethods/{paymentMethods}")
+    public ResponseEntity<List<Booking>> findBookingsByPaymentMethods(@PathVariable String paymentMethods) {
+        List<Booking> bookingsByPaymentMethodsFound = bookingService.findBookingsByPaymentMethods(paymentMethods);
+        if (bookingsByPaymentMethodsFound != null) {
+            return new ResponseEntity<>(bookingsByPaymentMethodsFound, HttpStatus.OK);
+        }
+        return new ResponseEntity("The form " + paymentMethods + " does not exist as a payment method.", HttpStatus.BAD_REQUEST);
     }
 }

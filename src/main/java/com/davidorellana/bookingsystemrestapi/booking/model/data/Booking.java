@@ -1,48 +1,47 @@
 package com.davidorellana.bookingsystemrestapi.booking.model.data;
 
 import com.davidorellana.bookingsystemrestapi.booking.model.dto.BookingDto;
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.*;
+import java.util.Objects;
 
-@Entity
-@Table(name = "bookings")
+@Document(collection = "booking_collection")
 public class Booking implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_booking")
-    private Long idBooking;
-    @Column(name = "booking_type")
+    private String id;
     private String bookingType;
     private Boolean reserved;
-    @Column(name = "booking_start_date")
+    @JsonFormat(timezone = "America/Guayaquil")
     private LocalDate bookingStartDate;
-    @Column(name = "booking_end_date")
+    @JsonFormat(timezone = "America/Guayaquil")
     private LocalDate bookingEndDate;
-    @Enumerated(EnumType.STRING)
-    @Column(name = "payment_methods")
+    @Field(targetType = FieldType.STRING)
     private PaymentMethods paymentMethods;
+    private Integer numberDaysBooking;
+    private Double priceBookingDay;
+    private Double totalPriceBooking;
 
     public Booking() { }
 
     public Booking(BookingDto bookingDto) {
-        this.bookingType = bookingDto.getBookingType();
-        this.reserved = bookingDto.getReserved();
-        this.bookingStartDate = bookingDto.getBookingStartDate();
-        this.bookingEndDate = bookingDto.getBookingEndDate();
-        this.paymentMethods = PaymentMethods.valueOf(bookingDto.getPaymentMethods());
+        this.updateBookingCollection(bookingDto);
     }
 
-    public Long getIdBooking() {
-        return idBooking;
+    public String getId() {
+        return id;
     }
 
-    public void setIdBooking(Long idBooking) {
-        this.idBooking = idBooking;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getBookingType() {
@@ -77,23 +76,74 @@ public class Booking implements Serializable {
         this.bookingEndDate = bookingEndDate;
     }
 
-    public String getPaymentMethods() {
-        return paymentMethods.name();
+    public PaymentMethods getPaymentMethods() {
+        return paymentMethods;
     }
 
-    public void setPaymentMethods(String paymentMethods) {
-        this.paymentMethods = PaymentMethods.valueOf(paymentMethods);
+    public void setPaymentMethods(PaymentMethods paymentMethods) {
+        this.paymentMethods = paymentMethods;
+    }
+
+    public Integer getNumberDaysBooking() {
+        return numberDaysBooking;
+    }
+
+    public void setNumberDaysBooking(Integer numberDaysBooking) {
+        this.numberDaysBooking = numberDaysBooking;
+    }
+
+    public Double getPriceBookingDay() {
+        return priceBookingDay;
+    }
+
+    public void setPriceBookingDay(Double priceBookingDay) {
+        this.priceBookingDay = priceBookingDay;
+    }
+
+    public Double getTotalPriceBooking() {
+        return totalPriceBooking;
+    }
+
+    public void setTotalPriceBooking(Double totalPriceBooking) {
+        this.totalPriceBooking = totalPriceBooking;
+    }
+
+    public void updateBookingCollection(BookingDto bookingDto) {
+        this.bookingType = bookingDto.getBookingType();
+        this.reserved = bookingDto.getReserved();
+        this.bookingStartDate = bookingDto.getBookingStartDate();
+        this.bookingEndDate = bookingDto.getBookingEndDate();
+        this.paymentMethods = bookingDto.getPaymentMethods();
+        this.numberDaysBooking = bookingEndDate.getDayOfYear() - bookingStartDate.getDayOfYear();
+        this.priceBookingDay = bookingDto.getPriceBookingDay();
+        this.totalPriceBooking = priceBookingDay * numberDaysBooking;
     }
 
     @Override
     public String toString() {
         return "Booking{" +
-                "idBooking=" + idBooking +
+                "id='" + id + '\'' +
                 ", bookingType='" + bookingType + '\'' +
-                ", isReserved=" + reserved +
+                ", reserved=" + reserved +
                 ", bookingStartDate=" + bookingStartDate +
                 ", bookingEndDate=" + bookingEndDate +
-                ", paymentsMethods=" + paymentMethods +
+                ", paymentMethods=" + paymentMethods +
+                ", numberDaysBooking=" + numberDaysBooking +
+                ", priceBookingDay=" + priceBookingDay +
+                ", totalPriceBooking=" + totalPriceBooking +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Booking booking = (Booking) o;
+        return Objects.equals(id, booking.id) && Objects.equals(bookingType, booking.bookingType) && Objects.equals(reserved, booking.reserved) && Objects.equals(bookingStartDate, booking.bookingStartDate) && Objects.equals(bookingEndDate, booking.bookingEndDate) && paymentMethods == booking.paymentMethods && Objects.equals(numberDaysBooking, booking.numberDaysBooking) && Objects.equals(priceBookingDay, booking.priceBookingDay) && Objects.equals(totalPriceBooking, booking.totalPriceBooking);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, bookingType, reserved, bookingStartDate, bookingEndDate, paymentMethods, numberDaysBooking, priceBookingDay, totalPriceBooking);
     }
 }
