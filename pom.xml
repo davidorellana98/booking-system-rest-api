@@ -12,7 +12,7 @@
 	<artifactId>booking-system-rest-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>booking-system-rest-api</name>
-	<description>Creating a rest api of a reservation system in Spring Boot</description>
+	<description>Creating a rest api of a booking system in Spring Boot with Connection to MongoDB</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
@@ -24,21 +24,13 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
+			<artifactId>spring-boot-starter-data-mongodb</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-			<version>3.0.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<version>2.1.214</version>
-			<scope>runtime</scope>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

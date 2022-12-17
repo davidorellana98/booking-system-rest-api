@@ -2,63 +2,96 @@ package com.davidorellana.bookingsystemrestapi.booking.repository;
 
 import com.davidorellana.bookingsystemrestapi.booking.model.data.Booking;
 import com.davidorellana.bookingsystemrestapi.booking.model.dto.BookingDto;
-import com.davidorellana.bookingsystemrestapi.user.model.data.User;
+import com.davidorellana.bookingsystemrestapi.booking.repository.mongorepository.BookingMongoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class BookingRepositoryImpl implements BookingRepositoryDao {
 
-    @Autowired
-    private BookingCrudRepository bookingCrudRepository;
+    private final BookingMongoRepository bookingMongoRepository;
 
-    @Override
-    public HashMap<Long, Booking> getAllBookings() {
-        HashMap<Long, Booking> bookingFounded = new HashMap<>();
-        bookingCrudRepository.findAll().forEach(booking -> {
-            bookingFounded.put(booking.getIdBooking(), booking);
-        });
-        return bookingFounded;
+    @Autowired
+    public BookingRepositoryImpl(BookingMongoRepository bookingMongoRepository) {
+        this.bookingMongoRepository = bookingMongoRepository;
     }
 
     @Override
-    public Booking findBookingById(Long idBooking) {
-        Optional<Booking> bookingFindById = bookingCrudRepository.findById(idBooking);
-        if (bookingFindById.isPresent()) {
-            return bookingFindById.get();
+    public List<Booking> findAllBookings() {
+        return bookingMongoRepository.findAll();
+    }
+
+    @Override
+    public Booking findBookingById(String id) {
+        Optional<Booking> bookingByIdFound = bookingMongoRepository.findById(id);
+        if (bookingByIdFound.isPresent()) {
+            return bookingByIdFound.get();
         }
         return null;
     }
 
     @Override
     public Booking createBooking(BookingDto bookingDto) {
-        Booking booking = new Booking(bookingDto);
-        return bookingCrudRepository.save(booking);
-    }
-
-    @Override
-    public Booking updateBookingById(Long idBooking, BookingDto bookingDto) {
-        Booking bookingFound = findBookingById(idBooking);
-        if (bookingFound != null) {
-            bookingFound.setBookingType(bookingDto.getBookingType());
-            bookingFound.setReserved(bookingDto.getReserved());
-            bookingFound.setBookingStartDate(bookingDto.getBookingStartDate());
-            bookingFound.setBookingEndDate(bookingDto.getBookingEndDate());
-            bookingFound.setPaymentMethods(bookingDto.getPaymentMethods());
-            return bookingCrudRepository.save(bookingFound);
+        if (bookingDto.getBookingStartDate().isAfter(LocalDate.now())) {
+            if (bookingDto.getBookingEndDate().isAfter(bookingDto.getBookingStartDate())) {
+                Booking booking = new Booking(bookingDto);
+                bookingMongoRepository.insert(booking);
+                return bookingMongoRepository.save(booking);
+            }
         }
-        return bookingFound;
+        return null;
     }
 
     @Override
-    public Boolean deleteBookingById(Long idBooking) {
-        if (bookingCrudRepository.existsById(idBooking)) {
-            bookingCrudRepository.deleteById(idBooking);
+    public Booking updateBookingById(String id, BookingDto bookingDto) {
+        Booking bookingFound = findBookingById(id);
+        if (bookingFound != null) {
+            Boolean comparisonStartDateNowDto = bookingDto.getBookingStartDate().isAfter(LocalDate.now());
+            Boolean comparisonStartDateEndDto = bookingDto.getBookingEndDate().isAfter(bookingDto.getBookingStartDate());
+            Boolean comparisonEndDtoDateStartFound = bookingDto.getBookingEndDate().isAfter(bookingFound.getBookingStartDate());
+            if (comparisonStartDateNowDto && comparisonStartDateEndDto && comparisonEndDtoDateStartFound) {
+                bookingFound.updateBookingCollection(bookingDto);
+                return bookingMongoRepository.save(bookingFound);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Boolean deleteBookingById(String id) {
+        Booking bookingFound = findBookingById(id);
+        if (bookingMongoRepository.existsById(id)) {
+            bookingMongoRepository.delete(bookingFound);
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void deleteAllBookings() {
+        List<Booking> bookingsFound = findAllBookings();
+        bookingMongoRepository.deleteAll(bookingsFound);
+    }
+
+    @Override
+    public List<Booking> findBookingsByBookingType(String bookingType) {
+        List<Booking> bookingsByBookingTypeFound = bookingMongoRepository.findBookingsByBookingType(bookingType);
+        if (bookingsByBookingTypeFound.isEmpty()) {
+            return null;
+        }
+        return bookingsByBookingTypeFound;
+    }
+
+    @Override
+    public List<Booking> findBookingsByPaymentMethods(String paymentMethods) {
+        List<Booking> bookingsByPaymentMethodsFound = bookingMongoRepository.findBookingsByPaymentMethods(paymentMethods);
+        if (bookingsByPaymentMethodsFound.isEmpty()) {
+            return null;
+        }
+        return bookingsByPaymentMethodsFound;
     }
 }

@@ -2,14 +2,19 @@ package com.davidorellana.bookingsystemrestapi.user.service;
 
 import com.davidorellana.bookingsystemrestapi.user.model.data.User;
 import com.davidorellana.bookingsystemrestapi.user.model.dto.UserDto;
+import com.davidorellana.bookingsystemrestapi.user.model.dto.UserUpdatedDto;
 
-import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
 
-    HashMap<Long, User> getAllUsers();
-    User findUserById(Long idUser);
+    List<User> findAllUsers();
+    User findUserById(String id);
     User createUser(UserDto userDto);
-    User updateUserById(Long idUser, UserDto userDto);
-    Boolean deleteUserById(Long idUser);
+    User updateUserById(String id, UserUpdatedDto userUpdatedDto);
+    Boolean deleteUserById(String id);
+    void deleteAllUsers();
+    List<User> findUserByNameAndLastName(String name, String lastName);
+    Optional<User> findUserByEmail(String email);
 }

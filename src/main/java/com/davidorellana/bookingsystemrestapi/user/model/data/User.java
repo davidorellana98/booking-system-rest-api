@@ -1,25 +1,27 @@
 package com.davidorellana.bookingsystemrestapi.user.model.data;
 
 import com.davidorellana.bookingsystemrestapi.user.model.dto.UserDto;
-import jakarta.persistence.*;
+import com.davidorellana.bookingsystemrestapi.user.model.dto.UserUpdatedDto;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
+import java.util.Objects;
 
-@Entity
-@Table(name = "users")
+@Document(collection = "user_collection")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     private String name;
-    @Column(name = "last_name")
     private String lastName;
     private Integer age;
-    @Column(name = "identity_card")
+    @Indexed(unique = true)
     private String identityCard;
+    @Indexed(unique = true)
     private String email;
 
     public User() { }
@@ -32,11 +34,15 @@ public class User implements Serializable {
         this.email = userDto.getEmail();
     }
 
-    public Long getId() {
+    public User(UserUpdatedDto userUpdatedDto) {
+        this.updateUserCollection(userUpdatedDto);
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -80,15 +86,35 @@ public class User implements Serializable {
         this.email = email;
     }
 
+    public void updateUserCollection(UserUpdatedDto userUpdatedDto) {
+        this.name = userUpdatedDto.getName();
+        this.lastName = userUpdatedDto.getLastName();
+        this.age = userUpdatedDto.getAge();
+        this.email = userUpdatedDto.getEmail();
+    }
+
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", age=" + age +
                 ", identityCard='" + identityCard + '\'' +
                 ", email='" + email + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(lastName, user.lastName) && Objects.equals(age, user.age) && Objects.equals(identityCard, user.identityCard) && Objects.equals(email, user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, lastName, age, identityCard, email);
     }
 }

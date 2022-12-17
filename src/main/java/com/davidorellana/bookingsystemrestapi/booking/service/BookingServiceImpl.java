@@ -4,24 +4,29 @@ import com.davidorellana.bookingsystemrestapi.booking.model.data.Booking;
 import com.davidorellana.bookingsystemrestapi.booking.model.dto.BookingDto;
 import com.davidorellana.bookingsystemrestapi.booking.repository.BookingRepositoryDao;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import java.util.List;
 
-@Repository
+@Service
 public class BookingServiceImpl implements BookingService {
 
+    private final BookingRepositoryDao bookingRepositoryDao;
+
     @Autowired
-    private BookingRepositoryDao bookingRepositoryDao;
+    public BookingServiceImpl(BookingRepositoryDao bookingRepositoryDao) {
+        this.bookingRepositoryDao = bookingRepositoryDao;
+    }
+
 
     @Override
-    public HashMap<Long, Booking> getAllBookings() {
-        return bookingRepositoryDao.getAllBookings();
+    public List<Booking> findAllBookings() {
+        return bookingRepositoryDao.findAllBookings();
     }
 
     @Override
-    public Booking findBookingById(Long idBooking) {
-        return bookingRepositoryDao.findBookingById(idBooking);
+    public Booking findBookingById(String id) {
+        return bookingRepositoryDao.findBookingById(id);
     }
 
     @Override
@@ -30,12 +35,27 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Booking updateBookingById(Long idBooking, BookingDto bookingDto) {
-        return bookingRepositoryDao.updateBookingById(idBooking, bookingDto);
+    public Booking updateBookingById(String id, BookingDto bookingDto) {
+        return bookingRepositoryDao.updateBookingById(id, bookingDto);
     }
 
     @Override
-    public Boolean deleteBookingById(Long idBooking) {
-        return bookingRepositoryDao.deleteBookingById(idBooking);
+    public Boolean deleteBookingById(String id) {
+        return bookingRepositoryDao.deleteBookingById(id);
+    }
+
+    @Override
+    public void deleteAllBookings() {
+        bookingRepositoryDao.deleteAllBookings();
+    }
+
+    @Override
+    public List<Booking> findBookingsByBookingType(String bookingType) {
+        return bookingRepositoryDao.findBookingsByBookingType(bookingType);
+    }
+
+    @Override
+    public List<Booking> findBookingsByPaymentMethods(String paymentMethods) {
+        return bookingRepositoryDao.findBookingsByPaymentMethods(paymentMethods);
     }
 }
