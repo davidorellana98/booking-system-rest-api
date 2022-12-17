@@ -3,17 +3,16 @@ package com.davidorellana.bookingsystemrestapi.user.model.dto;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class UserDto implements Serializable {
+public class UserUpdatedDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private String name;
     private String lastName;
     private Integer age;
-    private String identityCard;
     private String email;
 
-    public UserDto() { }
+    public UserUpdatedDto() { }
 
     public String getName() {
         return name;
@@ -39,14 +38,6 @@ public class UserDto implements Serializable {
         this.age = age;
     }
 
-    public String getIdentityCard() {
-        return identityCard;
-    }
-
-    public void setIdentityCard(String identityCard) {
-        this.identityCard = identityCard;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -59,13 +50,13 @@ public class UserDto implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserDto userDto = (UserDto) o;
-        return Objects.equals(name, userDto.name) && Objects.equals(lastName, userDto.lastName) && Objects.equals(age, userDto.age) && Objects.equals(identityCard, userDto.identityCard) && Objects.equals(email, userDto.email);
+        UserUpdatedDto userDto = (UserUpdatedDto) o;
+        return Objects.equals(name, userDto.name) && Objects.equals(lastName, userDto.lastName) && Objects.equals(age, userDto.age) && Objects.equals(email, userDto.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, lastName, age, identityCard, email);
+        return Objects.hash(name, lastName, age, email);
     }
 
     @Override
@@ -74,7 +65,6 @@ public class UserDto implements Serializable {
                 "name='" + name + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", age=" + age +
-                ", identityCard='" + identityCard + '\'' +
                 ", email='" + email + '\'' +
                 '}';
     }

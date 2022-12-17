@@ -2,62 +2,88 @@ package com.davidorellana.bookingsystemrestapi.user.repository;
 
 import com.davidorellana.bookingsystemrestapi.user.model.data.User;
 import com.davidorellana.bookingsystemrestapi.user.model.dto.UserDto;
+import com.davidorellana.bookingsystemrestapi.user.model.dto.UserUpdatedDto;
+import com.davidorellana.bookingsystemrestapi.user.repository.mongorepository.UserMongoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class UserRepositoryImpl implements UserRepositoryDao {
 
-    @Autowired
-    private UserCrudRepository userCrudRepository;
+    private final UserMongoRepository userMongoRepository;
 
-    @Override
-    public HashMap<Long, User> getAllUsers() {
-        HashMap<Long, User> usersFounded = new HashMap<>();
-        userCrudRepository.findAll().forEach(user -> {
-            usersFounded.put(user.getId(), user);
-        });
-        return usersFounded;
+    @Autowired
+    public UserRepositoryImpl(UserMongoRepository userMongoRepository) {
+        this.userMongoRepository = userMongoRepository;
     }
 
     @Override
-    public User findUserById(Long idUser) {
-        Optional<User> userFindById = userCrudRepository.findById(idUser);
-        if (userFindById.isPresent()) {
-            return userFindById.get();
+    public List<User> findAllUsers() {
+        return userMongoRepository.findAll();
+    }
+
+    @Override
+    public User findUserById(String id) {
+        Optional<User> userByIdFound = userMongoRepository.findById(id);
+        if (userByIdFound.isPresent()) {
+            return userByIdFound.get();
         }
         return null;
     }
 
     @Override
     public User createUser(UserDto userDto) {
-        User user = new User(userDto);
-        return userCrudRepository.save(user);
+        Optional<User> user = Optional.of(new User(userDto));
+        return userMongoRepository.save(user.get());
+
     }
 
     @Override
-    public User updateUserById(Long idUser, UserDto userDto) {
-        User userFound = findUserById(idUser);
+    @ManagedOperation(description = "Adds the key to the store")
+    public User updateUserById(String id, UserUpdatedDto userUpdatedDto) {
+        User userFound = findUserById(id);
         if (userFound != null) {
-            userFound.setName(userDto.getName());
-            userFound.setLastName(userDto.getLastName());
-            userFound.setAge(userDto.getAge());
-            userFound.setIdentityCard(userDto.getIdentityCard());
-            userFound.setEmail(userFound.getEmail());
-            return userCrudRepository.save(userFound);
+            userFound.updateUserCollection(userUpdatedDto);
+            return userMongoRepository.save(userFound);
         }
-        return userFound;
+        return null;
     }
 
     @Override
-    public Boolean deleteUserById(Long idUser) {
-        if (userCrudRepository.existsById(idUser)) {
-            userCrudRepository.deleteById(idUser);
+    public Boolean deleteUserById(String id) {
+        User userFound = findUserById(id);
+        if (userMongoRepository.existsById(id)) {
+            userMongoRepository.delete(userFound);
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void deleteAllUsers() {
+        List<User> usersFound = findAllUsers();
+        userMongoRepository.deleteAll(usersFound);
+    }
+
+    @Override
+    public List<User> findUserByNameAndLastName(String name, String lastName) {
+        List<User> userByNameAndLastNameFound = userMongoRepository.findUserByNameAndLastName(name, lastName)
+;        if (userByNameAndLastNameFound.isEmpty()) {
+            return null;
+        }
+        return userByNameAndLastNameFound;
+    }
+
+    @Override
+    public Optional<User> findUserByEmail(String email) {
+        Optional<User> userByEmailFound = userMongoRepository.findUserByEmail(email);
+        if (userByEmailFound.isEmpty()) {
+            return Optional.empty();
+        }
+        return userByEmailFound;
     }
 }

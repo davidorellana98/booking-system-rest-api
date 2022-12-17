@@ -2,18 +2,19 @@ package com.davidorellana.bookingsystemrestapi.user.controller;
 
 import com.davidorellana.bookingsystemrestapi.user.model.data.User;
 import com.davidorellana.bookingsystemrestapi.user.model.dto.UserDto;
+import com.davidorellana.bookingsystemrestapi.user.model.dto.UserUpdatedDto;
 import com.davidorellana.bookingsystemrestapi.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/v1/users")
 public class UserController {
 
     private final UserService userService;
@@ -24,48 +25,74 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<HashMap<Long, User>> getAllUsers() {
-        HashMap<Long, User> listAllUsers = userService.getAllUsers();
-        if (listAllUsers.isEmpty()) {
-            return new ResponseEntity("There are no users to display!", HttpStatus.NOT_FOUND);
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> allUsers = userService.findAllUsers();
+        if (allUsers.isEmpty()) {
+            return new ResponseEntity("The user collection is empty.", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(listAllUsers, HttpStatus.OK);
+        return new ResponseEntity<>(allUsers, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> findUserById(@PathVariable("id") Long idUser) {
-        User userById = userService.findUserById(idUser);
-        if (userById != null) {
-            return new ResponseEntity<>(userById, HttpStatus.OK);
+    public ResponseEntity<User> findUserById(@PathVariable String id) {
+        User userByIdFound = userService.findUserById(id);
+        if (userByIdFound != null) {
+            return new ResponseEntity<>(userByIdFound, HttpStatus.OK);
         }
-        return new ResponseEntity("That user id does not exist!", HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity("The id " + id + " does not exist in the users collection.", HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<User> createUser(@RequestBody UserDto userDto) {
-        Optional<User> userValidation = Optional.ofNullable(userService.createUser(userDto));
-        if (userValidation != null) {
-            return new ResponseEntity("Created user!", HttpStatus.CREATED);
+        User userCreated = userService.createUser(userDto);
+        if (userCreated != null) {
+            return new ResponseEntity<>(userCreated, HttpStatus.CREATED);
         }
-        return new ResponseEntity("User not created!", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity("The creation of the user could not be carried out, due to a duplicate email or identity card in the list.", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUserById(@PathVariable("id") Long idUser, @RequestBody UserDto userDto) {
-        User isUpdated = userService.updateUserById(idUser, userDto);
-        if (isUpdated != null){
-            return new ResponseEntity("Updated user!", HttpStatus.OK);
-        }else{
-            return new ResponseEntity("User not updated by id not found!", HttpStatus.NOT_FOUND);
+    public ResponseEntity<User> updateUserById(@PathVariable String id, @RequestBody UserUpdatedDto userUpdatedDto) {
+        User userUpdated = userService.updateUserById(id, userUpdatedDto);
+        if (userUpdated != null) {
+            return new ResponseEntity<>(userUpdated, HttpStatus.OK);
         }
+        return new ResponseEntity("User update failed, due to incorrect id or duplicate email.", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteUserById(@PathVariable("id") Long idUser) {
-        Boolean isDeletedUserById = userService.deleteUserById(idUser);
-        if (isDeletedUserById) {
-            return new ResponseEntity("Deleted user!", HttpStatus.OK);
+    public ResponseEntity<Boolean> deleteUserById(@PathVariable String id) {
+        if (userService.deleteUserById(id)) {
+            return new ResponseEntity("Deleted user.", HttpStatus.OK);
         }
-        return new ResponseEntity("The user does not exist to be deleted!", HttpStatus.NOT_FOUND);
+        return new ResponseEntity("The id " + id + " is not found in the collection of users to delete.", HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping
+    public ResponseEntity deleteAllUsers() {
+        List<User> allUsers = userService.findAllUsers();
+        userService.deleteAllUsers();
+        if (allUsers.isEmpty()) {
+            return new ResponseEntity("There is no collection of users to delete.", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity("Correct deletion of the entire user collection.", HttpStatus.OK);
+    }
+
+    @GetMapping("/nameAndLastName/{name}/{lastName}")
+    public ResponseEntity<List<User>> findUserByNameAndLastName(@PathVariable String name, @PathVariable String lastName) {
+        List<User> userByNameAndLastNameFound = userService.findUserByNameAndLastName(name, lastName);
+        if (userByNameAndLastNameFound != null) {
+            return new ResponseEntity<>(userByNameAndLastNameFound, HttpStatus.OK);
+        }
+        return new ResponseEntity("The user " + name + " " + lastName +", do not exist in the users collection.", HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<Optional<User>> findUserByEmail(@PathVariable String email) {
+        Optional<User> userByEmailFound = userService.findUserByEmail(email);
+        if (userByEmailFound.isPresent()) {
+            return new ResponseEntity<>(userByEmailFound, HttpStatus.OK);
+        }
+        return new ResponseEntity("The email " + email + " is not related to any user.", HttpStatus.NOT_FOUND);
     }
 }
