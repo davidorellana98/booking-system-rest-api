@@ -12,6 +12,7 @@ public class UserDto implements Serializable {
     private Integer age;
     private String identityCard;
     private String email;
+    private String password;
 
     public UserDto() { }
 
@@ -55,17 +56,12 @@ public class UserDto implements Serializable {
         this.email = email;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserDto userDto = (UserDto) o;
-        return Objects.equals(name, userDto.name) && Objects.equals(lastName, userDto.lastName) && Objects.equals(age, userDto.age) && Objects.equals(identityCard, userDto.identityCard) && Objects.equals(email, userDto.email);
+    public String getPassword() {
+        return password;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, lastName, age, identityCard, email);
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override
@@ -76,6 +72,20 @@ public class UserDto implements Serializable {
                 ", age=" + age +
                 ", identityCard='" + identityCard + '\'' +
                 ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserDto userDto = (UserDto) o;
+        return Objects.equals(name, userDto.name) && Objects.equals(lastName, userDto.lastName) && Objects.equals(age, userDto.age) && Objects.equals(identityCard, userDto.identityCard) && Objects.equals(email, userDto.email) && Objects.equals(password, userDto.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, lastName, age, identityCard, email, password);
     }
 }

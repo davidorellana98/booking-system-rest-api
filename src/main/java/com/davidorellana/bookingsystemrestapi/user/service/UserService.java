@@ -5,7 +5,6 @@ import com.davidorellana.bookingsystemrestapi.user.model.dto.UserDto;
 import com.davidorellana.bookingsystemrestapi.user.model.dto.UserUpdatedDto;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
 
@@ -16,5 +15,6 @@ public interface UserService {
     Boolean deleteUserById(String id);
     void deleteAllUsers();
     List<User> findUserByNameAndLastName(String name, String lastName);
-    Optional<User> findUserByEmail(String email);
+    User findUserByEmail(String email);
+    User findUserByIdentityCard(String identityCard);
 }

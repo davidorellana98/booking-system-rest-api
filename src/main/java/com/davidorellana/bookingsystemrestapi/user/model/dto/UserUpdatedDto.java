@@ -11,6 +11,7 @@ public class UserUpdatedDto implements Serializable {
     private String lastName;
     private Integer age;
     private String email;
+    private String password;
 
     public UserUpdatedDto() { }
 
@@ -46,26 +47,35 @@ public class UserUpdatedDto implements Serializable {
         this.email = email;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserUpdatedDto userDto = (UserUpdatedDto) o;
-        return Objects.equals(name, userDto.name) && Objects.equals(lastName, userDto.lastName) && Objects.equals(age, userDto.age) && Objects.equals(email, userDto.email);
+    public String getPassword() {
+        return password;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, lastName, age, email);
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override
     public String toString() {
-        return "UserDto{" +
+        return "UserUpdatedDto{" +
                 "name='" + name + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", age=" + age +
                 ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserUpdatedDto that = (UserUpdatedDto) o;
+        return Objects.equals(name, that.name) && Objects.equals(lastName, that.lastName) && Objects.equals(age, that.age) && Objects.equals(email, that.email) && Objects.equals(password, that.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, lastName, age, email, password);
     }
 }

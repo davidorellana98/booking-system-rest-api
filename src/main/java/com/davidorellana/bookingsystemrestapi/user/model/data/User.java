@@ -23,6 +23,7 @@ public class User implements Serializable {
     private String identityCard;
     @Indexed(unique = true)
     private String email;
+    private String password;
 
     public User() { }
 
@@ -32,6 +33,7 @@ public class User implements Serializable {
         this.age = userDto.getAge();
         this.identityCard = userDto.getIdentityCard();
         this.email = userDto.getEmail();
+        this.password = userDto.getPassword();
     }
 
     public User(UserUpdatedDto userUpdatedDto) {
@@ -86,11 +88,20 @@ public class User implements Serializable {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public void updateUserCollection(UserUpdatedDto userUpdatedDto) {
         this.name = userUpdatedDto.getName();
         this.lastName = userUpdatedDto.getLastName();
         this.age = userUpdatedDto.getAge();
         this.email = userUpdatedDto.getEmail();
+        this.password = userUpdatedDto.getPassword();
     }
 
     @Override
@@ -102,6 +113,7 @@ public class User implements Serializable {
                 ", age=" + age +
                 ", identityCard='" + identityCard + '\'' +
                 ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
                 '}';
     }
 
@@ -110,11 +122,11 @@ public class User implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(lastName, user.lastName) && Objects.equals(age, user.age) && Objects.equals(identityCard, user.identityCard) && Objects.equals(email, user.email);
+        return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(lastName, user.lastName) && Objects.equals(age, user.age) && Objects.equals(identityCard, user.identityCard) && Objects.equals(email, user.email) && Objects.equals(password, user.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, lastName, age, identityCard, email);
+        return Objects.hash(id, name, lastName, age, identityCard, email, password);
     }
 }
