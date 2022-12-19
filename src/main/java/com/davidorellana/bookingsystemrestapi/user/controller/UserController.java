@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -87,12 +86,12 @@ public class UserController {
         return new ResponseEntity("The user " + name + " " + lastName +", do not exist in the users collection.", HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/email/{email}")
-    public ResponseEntity<Optional<User>> findUserByEmail(@PathVariable String email) {
-        Optional<User> userByEmailFound = userService.findUserByEmail(email);
-        if (userByEmailFound.isPresent()) {
-            return new ResponseEntity<>(userByEmailFound, HttpStatus.OK);
+    @GetMapping("/identityCard/{identityCard}")
+    public ResponseEntity<User> findUserByIdentityCard(@PathVariable String identityCard) {
+        User userByIdentityCardFound = userService.findUserByIdentityCard(identityCard);
+        if (userByIdentityCardFound != null) {
+            return new ResponseEntity<>(userByIdentityCardFound, HttpStatus.OK);
         }
-        return new ResponseEntity("The email " + email + " is not related to any user.", HttpStatus.NOT_FOUND);
+        return new ResponseEntity("The identity Card " + identityCard + " is not related to any user.", HttpStatus.NOT_FOUND);
     }
 }

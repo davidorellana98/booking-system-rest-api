@@ -36,10 +36,9 @@ public class BookingRepositoryImpl implements BookingRepositoryDao {
 
     @Override
     public Booking createBooking(BookingDto bookingDto) {
-        if (bookingDto.getBookingStartDate().isAfter(LocalDate.now())) {
+        if (bookingDto.getBookingStartDate().isAfter(LocalDate.now().minusDays(1))) {
             if (bookingDto.getBookingEndDate().isAfter(bookingDto.getBookingStartDate())) {
                 Booking booking = new Booking(bookingDto);
-                bookingMongoRepository.insert(booking);
                 return bookingMongoRepository.save(booking);
             }
         }
@@ -50,7 +49,7 @@ public class BookingRepositoryImpl implements BookingRepositoryDao {
     public Booking updateBookingById(String id, BookingDto bookingDto) {
         Booking bookingFound = findBookingById(id);
         if (bookingFound != null) {
-            Boolean comparisonStartDateNowDto = bookingDto.getBookingStartDate().isAfter(LocalDate.now());
+            Boolean comparisonStartDateNowDto = bookingDto.getBookingStartDate().isAfter(LocalDate.now().minusDays(1));
             Boolean comparisonStartDateEndDto = bookingDto.getBookingEndDate().isAfter(bookingDto.getBookingStartDate());
             Boolean comparisonEndDtoDateStartFound = bookingDto.getBookingEndDate().isAfter(bookingFound.getBookingStartDate());
             if (comparisonStartDateNowDto && comparisonStartDateEndDto && comparisonEndDtoDateStartFound) {

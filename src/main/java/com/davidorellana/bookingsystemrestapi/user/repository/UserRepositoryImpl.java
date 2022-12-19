@@ -37,8 +37,8 @@ public class UserRepositoryImpl implements UserRepositoryDao {
 
     @Override
     public User createUser(UserDto userDto) {
-        Optional<User> user = Optional.of(new User(userDto));
-        return userMongoRepository.save(user.get());
+        User user = new User(userDto);
+        return userMongoRepository.save(user);
 
     }
 
@@ -79,11 +79,20 @@ public class UserRepositoryImpl implements UserRepositoryDao {
     }
 
     @Override
-    public Optional<User> findUserByEmail(String email) {
+    public User findUserByEmail(String email) {
         Optional<User> userByEmailFound = userMongoRepository.findUserByEmail(email);
-        if (userByEmailFound.isEmpty()) {
-            return Optional.empty();
+        if (userByEmailFound.isPresent()) {
+            return userByEmailFound.get();
         }
-        return userByEmailFound;
+        return null;
+    }
+
+    @Override
+    public User findUserByIdentityCard(String identityCard) {
+        Optional<User> userByEmailFound = userMongoRepository.findUserByIdentityCard(identityCard);
+        if (userByEmailFound.isPresent()) {
+            return userByEmailFound.get();
+        }
+        return null;
     }
 }
