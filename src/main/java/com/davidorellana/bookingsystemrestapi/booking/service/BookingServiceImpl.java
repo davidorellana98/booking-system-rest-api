@@ -18,7 +18,6 @@ public class BookingServiceImpl implements BookingService {
         this.bookingRepositoryDao = bookingRepositoryDao;
     }
 
-
     @Override
     public List<Booking> findAllBookings() {
         return bookingRepositoryDao.findAllBookings();
