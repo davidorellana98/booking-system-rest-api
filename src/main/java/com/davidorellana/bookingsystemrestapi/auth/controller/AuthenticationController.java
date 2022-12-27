@@ -5,6 +5,7 @@ import com.davidorellana.bookingsystemrestapi.auth.dto.TokenDto;
 import com.davidorellana.bookingsystemrestapi.auth.security.jwt.OperationJwt;
 import com.davidorellana.bookingsystemrestapi.user.model.data.User;
 import com.davidorellana.bookingsystemrestapi.user.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,7 @@ public class AuthenticationController {
         this.userService = userService;
     }
 
+    @Operation(summary = "Jwt generation to obtain the Token")
     @PostMapping
     public ResponseEntity<TokenDto> generateJwt(@RequestBody LoginDto loginDto) {
         User userFound = userService.findUserByEmail(loginDto.getEmail());
