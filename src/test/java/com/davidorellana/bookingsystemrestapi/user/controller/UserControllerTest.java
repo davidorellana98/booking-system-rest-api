@@ -1,7 +1,6 @@
 package com.davidorellana.bookingsystemrestapi.user.controller;
 
 import com.davidorellana.bookingsystemrestapi.user.model.data.User;
-import com.davidorellana.bookingsystemrestapi.user.model.dto.UserDto;
 import com.davidorellana.bookingsystemrestapi.user.model.dto.UserUpdatedDto;
 import com.davidorellana.bookingsystemrestapi.user.service.UserService;
 import org.junit.jupiter.api.*;
@@ -14,8 +13,6 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
