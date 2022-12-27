@@ -4,6 +4,7 @@ import com.davidorellana.bookingsystemrestapi.user.model.data.User;
 import com.davidorellana.bookingsystemrestapi.user.model.dto.UserDto;
 import com.davidorellana.bookingsystemrestapi.user.model.dto.UserUpdatedDto;
 import com.davidorellana.bookingsystemrestapi.user.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +24,9 @@ public class UserController {
         this.userService = userService;
     }
 
+    @Operation(summary = "Find all users")
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<User>> findAllUsers() {
         List<User> allUsers = userService.findAllUsers();
         if (allUsers.isEmpty()) {
             return new ResponseEntity("The user collection is empty.", HttpStatus.NOT_FOUND);
@@ -32,6 +34,7 @@ public class UserController {
         return new ResponseEntity<>(allUsers, HttpStatus.OK);
     }
 
+    @Operation(summary = "Find user by its id")
     @GetMapping("/{id}")
     public ResponseEntity<User> findUserById(@PathVariable String id) {
         User userByIdFound = userService.findUserById(id);
@@ -41,6 +44,7 @@ public class UserController {
         return new ResponseEntity("The id " + id + " does not exist in the users collection.", HttpStatus.NOT_FOUND);
     }
 
+    @Operation(summary = "Create a user")
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody UserDto userDto) {
         User userCreated = userService.createUser(userDto);
@@ -50,6 +54,7 @@ public class UserController {
         return new ResponseEntity("The creation of the user could not be carried out, due to a duplicate email or identity card in the list.", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @Operation(summary = "Update a user by its id")
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUserById(@PathVariable String id, @RequestBody UserUpdatedDto userUpdatedDto) {
         User userUpdated = userService.updateUserById(id, userUpdatedDto);
@@ -59,6 +64,7 @@ public class UserController {
         return new ResponseEntity("User update failed, due to incorrect id or duplicate email.", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @Operation(summary = "Delete a user by its id")
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteUserById(@PathVariable String id) {
         if (userService.deleteUserById(id)) {
@@ -67,6 +73,7 @@ public class UserController {
         return new ResponseEntity("The id " + id + " is not found in the collection of users to delete.", HttpStatus.NOT_FOUND);
     }
 
+    @Operation(summary = "Delete all users")
     @DeleteMapping
     public ResponseEntity deleteAllUsers() {
         List<User> allUsers = userService.findAllUsers();
@@ -77,6 +84,7 @@ public class UserController {
         return new ResponseEntity("Correct deletion of the entire user collection.", HttpStatus.OK);
     }
 
+    @Operation(summary = "Find users by its name and lastname")
     @GetMapping("/nameAndLastName/{name}/{lastName}")
     public ResponseEntity<List<User>> findUserByNameAndLastName(@PathVariable String name, @PathVariable String lastName) {
         List<User> userByNameAndLastNameFound = userService.findUserByNameAndLastName(name, lastName);
@@ -86,6 +94,7 @@ public class UserController {
         return new ResponseEntity("The user " + name + " " + lastName +", do not exist in the users collection.", HttpStatus.NOT_FOUND);
     }
 
+    @Operation(summary = "Find user by its identity card (DNI)")
     @GetMapping("/identityCard/{identityCard}")
     public ResponseEntity<User> findUserByIdentityCard(@PathVariable String identityCard) {
         User userByIdentityCardFound = userService.findUserByIdentityCard(identityCard);
