@@ -36,6 +36,17 @@ public class Booking implements Serializable {
         this.updateBookingCollection(bookingDto);
     }
 
+    public Booking(String bookingType, Boolean reserved, LocalDate bookingStartDate, LocalDate bookingEndDate, PaymentMethods paymentMethods, Integer numberDaysBooking, Double priceBookingDay, Double totalPriceBooking) {
+        this.bookingType = bookingType;
+        this.reserved = reserved;
+        this.bookingStartDate = bookingStartDate;
+        this.bookingEndDate = bookingEndDate;
+        this.paymentMethods = paymentMethods;
+        this.numberDaysBooking = numberDaysBooking;
+        this.priceBookingDay = priceBookingDay;
+        this.totalPriceBooking = totalPriceBooking;
+    }
+
     public String getId() {
         return id;
     }

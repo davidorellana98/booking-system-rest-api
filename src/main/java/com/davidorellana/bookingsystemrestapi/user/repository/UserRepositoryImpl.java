@@ -5,7 +5,6 @@ import com.davidorellana.bookingsystemrestapi.user.model.dto.UserDto;
 import com.davidorellana.bookingsystemrestapi.user.model.dto.UserUpdatedDto;
 import com.davidorellana.bookingsystemrestapi.user.repository.mongorepository.UserMongoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -43,7 +42,6 @@ public class UserRepositoryImpl implements UserRepositoryDao {
     }
 
     @Override
-    @ManagedOperation(description = "Adds the key to the store")
     public User updateUserById(String id, UserUpdatedDto userUpdatedDto) {
         User userFound = findUserById(id);
         if (userFound != null) {

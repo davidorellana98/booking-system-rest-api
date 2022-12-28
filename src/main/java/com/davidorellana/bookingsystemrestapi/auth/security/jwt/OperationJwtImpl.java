@@ -15,7 +15,7 @@ public class OperationJwtImpl implements OperationJwt {
     @Value("${KEY_SECRET}")
     private String keySecret;
 
-    private final Integer MINUTES_JWT_EXPIRATION = 45;
+    private final Integer MINUTES_JWT_EXPIRATION = 30;
 
     @Override
     public String generateJwt(User user, Calendar expirationDate) {

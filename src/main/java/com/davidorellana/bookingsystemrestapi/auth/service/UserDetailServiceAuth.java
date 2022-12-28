@@ -13,8 +13,12 @@ import java.util.ArrayList;
 @Service
 public class UserDetailServiceAuth implements UserDetailsService {
 
+    private final UserRepositoryDao userRepositoryDao;
+
     @Autowired
-    private UserRepositoryDao userRepositoryDao;
+    public UserDetailServiceAuth(UserRepositoryDao userRepositoryDao) {
+        this.userRepositoryDao = userRepositoryDao;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

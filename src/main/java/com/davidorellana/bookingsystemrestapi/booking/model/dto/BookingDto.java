@@ -19,6 +19,15 @@ public class BookingDto implements Serializable {
 
     public BookingDto() { }
 
+    public BookingDto(String bookingType, Boolean reserved, LocalDate bookingStartDate, LocalDate bookingEndDate, PaymentMethods paymentMethods, Double priceBookingDay) {
+        this.bookingType = bookingType;
+        this.reserved = reserved;
+        this.bookingStartDate = bookingStartDate;
+        this.bookingEndDate = bookingEndDate;
+        this.paymentMethods = paymentMethods;
+        this.priceBookingDay = priceBookingDay;
+    }
+
     public String getBookingType() {
         return bookingType;
     }

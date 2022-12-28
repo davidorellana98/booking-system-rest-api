@@ -1,6 +1,7 @@
 package com.davidorellana.bookingsystemrestapi.auth.dto;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class LoginDto implements Serializable {
 
@@ -31,5 +32,26 @@ public class LoginDto implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "LoginDto{" +
+                "email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LoginDto loginDto = (LoginDto) o;
+        return Objects.equals(email, loginDto.email) && Objects.equals(password, loginDto.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email, password);
     }
 }
