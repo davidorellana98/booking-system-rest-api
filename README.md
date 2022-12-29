@@ -10,7 +10,8 @@ El proyecto fue realizado siguiendo las buenas prácticas de programación, adem
 * Jwt y Spring Security
 * Test unitarios con JUnit y Mockito
 * Documentación con Swagger
-* Integración Continua (CI) y Entrega Continua (CD) con Github Actions y [Railway](https://railway.app/)
+* Integración Continua (CI) y Entrega Continua (CD) con Github Actions
+* [Railway](https://railway.app/) | PaaS para publicación de la Api
 
 ## Documentación con Swagger
 
