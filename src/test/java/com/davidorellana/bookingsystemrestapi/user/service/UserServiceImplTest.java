@@ -84,4 +84,46 @@ class UserServiceImplTest {
 
         Assertions.assertEquals(userMockito, userResult);
     }
+
+    @Test
+    @Order(5)
+    public void delete_user_by_id() {
+
+        Mockito.when(userRepositoryDao.deleteUserById("1")).thenReturn(true);
+
+        Boolean userResult = userService.deleteUserById("1");
+
+        Assertions.assertEquals(true, userResult);
+    }
+
+    @Test
+    @Order(8)
+    public void find_user_by_name_and_lastName() {
+
+        List<User> userListMockito = new ArrayList<>();
+        userListMockito.add(new User("luis", "orellana", 25, "123456", "luis@mail.com", "12345"));
+        userListMockito.add(new User( "felipe", "calvache", 28, "123457", "felipe@mail.com", "12345"));
+
+        Mockito.when(userRepositoryDao.findUserByNameAndLastName("luis", "orellana")).thenReturn(userListMockito);
+
+        List<User> userFoundNameAndLastNameResult = userService.findUserByNameAndLastName("luis", "orellana");
+        List<User> userListExpected = new ArrayList<>();
+        userListExpected.add(new User("luis", "orellana", 25, "123456", "luis@mail.com", "12345"));
+        userListExpected.add(new User( "felipe", "calvache", 28, "123457", "felipe@mail.com", "12345"));
+
+        Assertions.assertEquals(userListExpected, userFoundNameAndLastNameResult);
+    }
+
+    @Test
+    @Order(9)
+    public void find_user_by_identityCard() {
+
+        User userIdentityMockito = new User("luis", "orellana", 25, "123456", "luis@mail.com", "12345");
+
+        Mockito.when(userRepositoryDao.findUserByIdentityCard("123456")).thenReturn(userIdentityMockito);
+
+        User userByIdentityCardResult = userService.findUserByIdentityCard("123456");
+        User userIdentityExpected = new User("luis", "orellana", 25, "123456", "luis@mail.com", "12345");
+        Assertions.assertEquals(userIdentityExpected, userByIdentityCardResult);
+    }
 }
