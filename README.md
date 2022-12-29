@@ -1,4 +1,4 @@
-<h1 style="text-align:center;">Proyecto Integrador: Booking System Rest API</h1>
+<h1 align="center">Proyecto Integrador: Booking System Rest API</h1>
 
 El proyecto fue realizado siguiendo las buenas prácticas de programación, además contiene las siguientes implementaciones:
 
@@ -10,8 +10,7 @@ El proyecto fue realizado siguiendo las buenas prácticas de programación, adem
 * Jwt y Spring Security
 * Test unitarios con JUnit y Mockito
 * Documentación con Swagger
-* Integración Continua (CI) y Entrega Continua (CD) con Github Actions
-* [Railway](https://railway.app/) - PaaS para publicación de la Api
+* Integración Continua (CI) y Entrega Continua (CD) con Github Actions y [Railway](https://railway.app/)
 
 ## Documentación con Swagger
 
