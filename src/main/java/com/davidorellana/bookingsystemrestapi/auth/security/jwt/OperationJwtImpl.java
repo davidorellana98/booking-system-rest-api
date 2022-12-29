@@ -13,7 +13,7 @@ import java.util.Date;
 public class OperationJwtImpl implements OperationJwt {
 
     @Value("${KEY_SECRET}")
-    private String keySecret;
+    private String KEY_SECRET;
 
     private final Integer MINUTES_JWT_EXPIRATION = 30;
 
@@ -25,7 +25,7 @@ public class OperationJwtImpl implements OperationJwt {
                 .claim("name", user.getName())
                 .setIssuedAt(new Date())
                 .setExpiration(expirationDate.getTime())
-                .signWith(SignatureAlgorithm.HS256, keySecret)
+                .signWith(SignatureAlgorithm.HS256, KEY_SECRET)
                 .compact();
     }
 
@@ -46,7 +46,7 @@ public class OperationJwtImpl implements OperationJwt {
     @Override
     public Claims returnClaims(String jwt) {
         return Jwts.parser()
-                .setSigningKey(keySecret)
+                .setSigningKey(KEY_SECRET)
                 .parseClaimsJws(jwt)
                 .getBody();
     }
