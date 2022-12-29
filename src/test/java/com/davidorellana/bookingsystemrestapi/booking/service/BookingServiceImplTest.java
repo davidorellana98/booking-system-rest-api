@@ -69,9 +69,8 @@ class BookingServiceImplTest {
         Mockito.when(bookingRepositoryDao.createBooking(bookingDtoMockito)).thenReturn(bookingMockito);
 
         Booking bookingResult = bookingService.createBooking(bookingDtoMockito);
-        Booking bookingExpected = new Booking("home", true, LocalDate.now(), LocalDate.of(2022,12,30), PaymentMethods.CASH, 2,30.0,60.0);
 
-        Assertions.assertTrue(bookingExpected.equals(bookingResult));
+        Assertions.assertEquals(bookingMockito, bookingResult);
     }
 
     @Test
