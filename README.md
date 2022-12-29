@@ -6,10 +6,12 @@ El proyecto fue realizado siguiendo las buenas prácticas de programación, adem
 * Java versión 11
 * Gestor de Dependencias Maven
 * Spring Boot versión 2.7.5
-* Persistencia de datos con MongoDB
+* Persistencia de datos Cloud con MongoDB
 * Jwt y Spring Security
 * Test unitarios con JUnit y Mockito
 * Documentación con Swagger
+* Integración Continua (CI) y Entrega Continua (CD) con Github Actions
+* [Railway](https://railway.app/) - PaaS para publicación de la Api
 
 ## Documentación con Swagger
 
