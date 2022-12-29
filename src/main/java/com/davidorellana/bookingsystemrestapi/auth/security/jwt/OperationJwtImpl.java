@@ -40,7 +40,7 @@ public class OperationJwtImpl implements OperationJwt {
     @Override
     public Boolean validateJwt(String jwt, User user) {
         Boolean isJwtExpired = returnClaims(jwt).getExpiration().before(new Date());
-        return user.getId().equals(extractSubject(jwt)) &&  !isJwtExpired;
+        return user.getId().equals(extractSubject(jwt)) && !isJwtExpired;
     }
 
     @Override
