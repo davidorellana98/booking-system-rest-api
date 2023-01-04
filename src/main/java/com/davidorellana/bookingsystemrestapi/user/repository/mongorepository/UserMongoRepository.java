@@ -9,12 +9,12 @@ import java.util.Optional;
 
 public interface UserMongoRepository extends MongoRepository<User, String> {
 
-   // @Query(value = "{'name' : ?0, 'lastName' : ?1}", exists = true)
+    @Query(value = "{'name' : ?0, 'lastName' : ?1}", exists = true)
     List<User> findUserByNameAndLastName(String name, String lastName);
 
-   // @Query(value = "{'email' : ?0}")
+    @Query(value = "{'email' : ?0}")
     Optional<User> findUserByEmail(String email);
 
-   // @Query(value = "{'identityCard' : ?0}")
+    @Query(value = "{'identityCard' : ?0}")
     Optional<User> findUserByIdentityCard(String identityCard);
 }

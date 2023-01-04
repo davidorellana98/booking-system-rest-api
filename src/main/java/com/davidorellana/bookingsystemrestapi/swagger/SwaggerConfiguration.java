@@ -49,7 +49,7 @@ public class SwaggerConfiguration {
     private ApiInfo apiInfo() {
         return new ApiInfo(
                 "Documentation - Integrator Project: Booking System Rest Api",
-                "Booking System Rest Api Project: Implementation of User, Booking and Authentication microservices, with implementation to a NoSql MongoDB database, JWT and Security database, Unit Test.",
+                "Booking System Rest Api Project: Implementation of User, Booking and Authentication microservices, Cloud data persistence with MongoDB, Jwt y Spring Security, Unit Tes and Mockito y more.",
                 "v1.0.0",
                 "",
                 new Contact("Luis David Orellana", "https://www.linkedin.com/in/luisdavidorellana/", ""),
